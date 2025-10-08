@@ -24,9 +24,9 @@ class Scanner(Lexer):
 
     # String containing ignored characters
     ignore = '  \t'
+    ignore_comment = r'\#.*'
 
     # Regular expression rules for tokens
-    #ASSIGN  = r'='
     MULASSIGN = r'\*='
     DIVASSIGN = r'/='
     ADDASSIGN = r'\+='
@@ -44,14 +44,14 @@ class Scanner(Lexer):
     
     literals = { '(', ')', '{', '}', '[', ']', ':',"'", ',', ';', '=' }
     
-    
-    
     EQ = r'=='
     LE = r'<='
     LT = r'<'
     GE = r'>='
     GT = r'>'
     NE = r'!='
+
+    ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
 
     IF = r'if'
     ELSE = r'else'
@@ -65,30 +65,35 @@ class Scanner(Lexer):
     EYE = r'eye'
     ZEROS = r'zeros'
     ONES = r'ones'
-
+    
     PRINT = r'print'
+    # ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
+    # ID['if'] = IF
+    # ID['else'] = ELSE
+    # ID['for'] = FOR
+    # ID['while'] = WHILE
+    
+    # ID['break'] = BREAK
+    # ID['continue'] = CONTINUE
+    # ID['return'] = RETURN
+    
+    # ID['eye'] = EYE
+    # ID['zeros'] = ZEROS
+    # ID['ones'] = ONES
+    # ID['print'] = PRINT
 
     FLOAT = r'([0-9]?|[1-9][0-9]*)\.[0-9]*(E-?[1-9][0-9]*)?'
-
-    ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
-
-    INT = r'[1-9][0-9]*(E-?[1-9][0-9]*)?'
-
-    STRING = r'"'
-
+    
     @_(r'\d+')
     def NUMBER(self, t):
         t.value = int(t.value)
         return t
 
-    # Identifiers and keywords
-    # ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
-    # ID['for'] = FOR
-    # ID['else'] = ELSE
-    # ID['while'] = WHILE
-    # ID['print'] = PRINT
+    @_(r'(".*?")|(\'.*?\')')
+    def STRING(self, t):
+        t.value = str(t.value)
+        return t
 
-    ignore_comment = r'\#.*'
 
     # Line number tracking
     @_(r'\n+')
