@@ -4,16 +4,34 @@ from sly import Lexer
 
 class Scanner(Lexer):
     # Set of token names.   This is always required
-    tokens = { NUMBER, ID, WHILE, IF, ELSE, PRINT,
-               PLUS, MINUS, TIMES, DIVIDE, ASSIGN,
-               EQ, LT, LE, GT, GE, NE }
+    tokens = {
+        'NUMBER', 'ID', 'WHILE', 'IF', 'ELSE', 'PRINT',
+        'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
+        'ASSIGN', 'MULASSIGN', 'DIVASSIGN', 'ADDASSIGN', 'SUBASSIGN',
+        'EQ', 'LT', 'LE', 'GT', 'GE', 'NE',
+        'FOR',
+        'DOTPLUS', 'DOTMINUS', 'DOTTIMES', 'DOTDIV',
+        'IF', 'ELSE', 'FOR', 'WHILE',
+        'BREAK', 'CONTINUE', 'RETURN',
+        'EYE', 'ZEROS', 'ONES',
+        'PRINT',
+        'INT',
+        'FLOAT',
+        "STRING",
+        }
 
 
 
     # String containing ignored characters
-    ignore = ' \t'
+    ignore = '  \t'
 
     # Regular expression rules for tokens
+    #ASSIGN  = r'='
+    MULASSIGN = r'\*='
+    DIVASSIGN = r'/='
+    ADDASSIGN = r'\+='
+    SUBASSIGN = r'-='
+
     PLUS    = r'\+'
     MINUS   = r'-'
     TIMES   = r'\*'
@@ -24,21 +42,39 @@ class Scanner(Lexer):
     DOTTIMES= r'\.\*'
     DOTDIV  = r'\./'
     
-    literals = { '(', ')', '{', '}', '[', ']' }
-    
-    ASSIGN  = r'='
-    MULASSIGN = r'\*='
-    DIVASSIGN = r'/='
-    ADDASSIGN = r'\+='
-    SUBASSIGN = r'-='
+    literals = { '(', ')', '{', '}', '[', ']', ':',"'", ',', ';', '=' }
     
     
-    EQ      = r'=='
-    LE      = r'<='
-    LT      = r'<'
-    GE      = r'>='
-    GT      = r'>'
-    NE      = r'!='
+    
+    EQ = r'=='
+    LE = r'<='
+    LT = r'<'
+    GE = r'>='
+    GT = r'>'
+    NE = r'!='
+
+    IF = r'if'
+    ELSE = r'else'
+    FOR = r'for'
+    WHILE = r'while'
+
+    BREAK = r'break'
+    CONTINUE = r'continue'
+    RETURN = r'return'
+
+    EYE = r'eye'
+    ZEROS = r'zeros'
+    ONES = r'ones'
+
+    PRINT = r'print'
+
+    FLOAT = r'([0-9]?|[1-9][0-9]*)\.[0-9]*(E-?[1-9][0-9]*)?'
+
+    ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
+
+    INT = r'[1-9][0-9]*(E-?[1-9][0-9]*)?'
+
+    STRING = r'"'
 
     @_(r'\d+')
     def NUMBER(self, t):
@@ -46,11 +82,11 @@ class Scanner(Lexer):
         return t
 
     # Identifiers and keywords
-    ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
-    ID['for'] = FOR
-    ID['else'] = ELSE
-    ID['while'] = WHILE
-    ID['print'] = PRINT
+    # ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
+    # ID['for'] = FOR
+    # ID['else'] = ELSE
+    # ID['while'] = WHILE
+    # ID['print'] = PRINT
 
     ignore_comment = r'\#.*'
 
@@ -73,7 +109,7 @@ if __name__ == '__main__':
         text = file.read()
 
     for tok in lexer.tokenize(text):
-        print(f"{tok.lineno}: {tok.type}({tok.value})")
+        print(f"({tok.lineno}): {tok.type}({tok.value})")
 
 
   
