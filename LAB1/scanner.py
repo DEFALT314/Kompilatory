@@ -5,12 +5,12 @@ from sly import Lexer
 class Scanner(Lexer):
     # Set of token names.   This is always required
     tokens = {
-        'NUMBER', 'ID', 'WHILE', 'IF', 'ELSE', 'PRINT',
-        'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
+        'INTNUM', 'ID', 'WHILE', 'IF', 'ELSE', 'PRINT',
+        'ADD', 'SUB', 'MUL', 'DIVIDE',
         'ASSIGN', 'MULASSIGN', 'DIVASSIGN', 'ADDASSIGN', 'SUBASSIGN',
         'EQ', 'LT', 'LE', 'GT', 'GE', 'NE',
         'FOR',
-        'DOTPLUS', 'DOTMINUS', 'DOTTIMES', 'DOTDIV',
+        'DOTADD', 'DOTSUB', 'DOTMUL', 'DOTDIV',
         'IF', 'ELSE', 'FOR', 'WHILE',
         'BREAK', 'CONTINUE', 'RETURN',
         'EYE', 'ZEROS', 'ONES',
@@ -32,14 +32,14 @@ class Scanner(Lexer):
     ADDASSIGN = r'\+='
     SUBASSIGN = r'-='
 
-    PLUS    = r'\+'
-    MINUS   = r'-'
-    TIMES   = r'\*'
+    ADD    = r'\+'
+    SUB   = r'-'
+    MUL   = r'\*'
     DIVIDE  = r'/'
     
-    DOTPLUS = r'\.\+'
-    DOTMINUS= r'\.-'
-    DOTTIMES= r'\.\*'
+    DOTADD = r'\.\+'
+    DOTSUB= r'\.-'
+    DOTMUL= r'\.\*'
     DOTDIV  = r'\./'
     
     literals = { '(', ')', '{', '}', '[', ']', ':',"'", ',', ';', '=' }
@@ -50,8 +50,6 @@ class Scanner(Lexer):
     GE = r'>='
     GT = r'>'
     NE = r'!='
-
-    ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
 
     IF = r'if'
     ELSE = r'else'
@@ -67,6 +65,9 @@ class Scanner(Lexer):
     ONES = r'ones'
     
     PRINT = r'print'
+
+    ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
+    
     # ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
     # ID['if'] = IF
     # ID['else'] = ELSE
@@ -85,7 +86,7 @@ class Scanner(Lexer):
     FLOAT = r'([0-9]?|[1-9][0-9]*)\.[0-9]*(E-?[1-9][0-9]*)?'
     
     @_(r'\d+')
-    def NUMBER(self, t):
+    def INTNUM(self, t):
         t.value = int(t.value)
         return t
 
