@@ -51,39 +51,23 @@ class Scanner(Lexer):
     GT = r'>'
     NE = r'!='
 
-    IF = r'if'
-    ELSE = r'else'
-    FOR = r'for'
-    WHILE = r'while'
-
-    BREAK = r'break'
-    CONTINUE = r'continue'
-    RETURN = r'return'
-
-    EYE = r'eye'
-    ZEROS = r'zeros'
-    ONES = r'ones'
-    
-    PRINT = r'print'
 
     ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
+    ID['if'] = IF
+    ID['else'] = ELSE
+    ID['for'] = FOR
+    ID['while'] = WHILE
     
-    # ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
-    # ID['if'] = IF
-    # ID['else'] = ELSE
-    # ID['for'] = FOR
-    # ID['while'] = WHILE
+    ID['break'] = BREAK
+    ID['continue'] = CONTINUE
+    ID['return'] = RETURN
     
-    # ID['break'] = BREAK
-    # ID['continue'] = CONTINUE
-    # ID['return'] = RETURN
-    
-    # ID['eye'] = EYE
-    # ID['zeros'] = ZEROS
-    # ID['ones'] = ONES
-    # ID['print'] = PRINT
+    ID['eye'] = EYE
+    ID['zeros'] = ZEROS
+    ID['ones'] = ONES
+    ID['print'] = PRINT
 
-    FLOAT = r'([0-9]?|[1-9][0-9]*)\.[0-9]*(E-?[1-9][0-9]*)?'
+    FLOAT = r'(0\.|[1-9][0-9]*\.|\.[0-9])[0-9]*(([Ee][+-]?)?[1-9][0-9]*)?'
     
     @_(r'\d+')
     def INTNUM(self, t):
