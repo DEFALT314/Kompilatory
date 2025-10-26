@@ -15,7 +15,6 @@ class Scanner(Lexer):
         'BREAK', 'CONTINUE', 'RETURN',
         'EYE', 'ZEROS', 'ONES',
         'PRINT',
-        'INT',
         'FLOAT',
         "STRING",
         }
