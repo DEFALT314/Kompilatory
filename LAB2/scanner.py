@@ -7,7 +7,7 @@ class Scanner(Lexer):
     tokens = {
         'INTNUM', 'ID', 'WHILE', 'IF', 'ELSE', 'PRINT',
         'ADD', 'SUB', 'MUL', 'DIVIDE',
-        'ASSIGN', 'MULASSIGN', 'DIVASSIGN', 'ADDASSIGN', 'SUBASSIGN',
+        'MULASSIGN', 'DIVASSIGN', 'ADDASSIGN', 'SUBASSIGN',
         'EQ', 'LT', 'LE', 'GT', 'GE', 'NE',
         'FOR',
         'DOTADD', 'DOTSUB', 'DOTMUL', 'DOTDIV',

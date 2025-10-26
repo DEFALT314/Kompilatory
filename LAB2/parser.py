@@ -5,43 +5,39 @@ from scanner import Scanner
 class Mparser(Parser):
 
     tokens = Scanner.tokens
-
     debugfile = 'parser.out'
 
-
     precedence = (
-    ("nonassoc", 'IFX'),
-    ("nonassoc", 'ELSE'),
-    ("left", 'ADD', 'SUB'),
-    ("left", 'MUL', 'DIVIDE'),
-    ("right", '=', 'MULASSIGN', 'DIVASSIGN', 'ADDASSIGN', 'SUBASSIGN'),
-    ("nonassoc", 'EQ', 'LT', 'LE', 'GT', 'GE', 'NE'),
-    ("left", 'DOTADD', 'DOTSUB'),
-    ("left", 'DOTMUL', 'DOTDIV'),
-    # ("right", 'UMINUS')
+        ("right", '=', 'MULASSIGN', 'DIVASSIGN', 'ADDASSIGN', 'SUBASSIGN'),
+        ("nonassoc", 'IFX'),
+        ("nonassoc", 'ELSE'),
+        ("nonassoc", 'EQ', 'LT', 'LE', 'GT', 'GE', 'NE'),
+        ("left", 'ADD', 'SUB'),
+        ("left", 'MUL', 'DIVIDE'),
+        ("left", 'DOTADD', 'DOTSUB'),
+        ("left", 'DOTMUL', 'DOTDIV'),
+        ("right", 'UMINUS')
     )
 
-
     @_('instructions_opt')
-    def program(p):
+    def program(self, p):
         pass
 
     @_('instructions')
-    def instructions_opt(p):
+    def instructions_opt(self, p):
         pass
 
     @_('')
-    def instructions_opt(p):
+    def instructions_opt(self, p):
         pass
 
     @_('instructions instruction')
-    def instructions(p):
+    def instructions(self, p):
         pass
 
     @_('instruction')
-    def instructions(p):
+    def instructions(self, p):
         pass
-
 
     @_('assignment',
        'if_stmt',
@@ -51,48 +47,48 @@ class Mparser(Parser):
        'print_stmt',
        'block_stmt',
        'expr ";"')
-    def instruction(p):
+    def instruction(self, p):
         pass
     
     @_('BREAK ";"',
        'CONTINUE ";"',
        'RETURN ";"',
        'RETURN expr ";"')
-    def flow_stmt(p):
+    def flow_stmt(self, p):
         pass
 
     @_('IF "(" expr ")" instruction ELSE instruction',
        'IF "(" expr ")" instruction %prec IFX')
-    def if_stmt(p):
+    def if_stmt(self, p):
         pass
     
     @_('WHILE "(" expr ")" instruction')
-    def while_stmt(p):
+    def while_stmt(self, p):
         pass
     
     @_('FOR ID "=" expr ":" expr instruction')
-    def for_stmt(p):
+    def for_stmt(self, p):
         pass
     
     @_('"{" instructions "}"')
-    def block_stmt(p):
+    def block_stmt(self, p):
         pass
     
     @_('PRINT expr ";"')
-    def print_stmt(p):
+    def print_stmt(self, p):
         pass
     
-    @_('lvalue ASSIGN expr',
-       'lvalue ADDASSIGN expr',
-       'lvalue SUBASSIGN expr',
-       'lvalue MULASSIGN expr',
-       'lvalue DIVASSIGN expr')
-    def assignment(p):
+    @_('lvalue "=" expr ";"',
+       'lvalue ADDASSIGN expr ";"',
+       'lvalue SUBASSIGN expr ";"',
+       'lvalue MULASSIGN expr ";"',
+       'lvalue DIVASSIGN expr ";"')
+    def assignment(self, p):
         pass
     
     @_('ID',
        'ID "[" expr_list "]"')
-    def lvalue(p):
+    def lvalue(self, p):
         pass
 
     @_('expr ADD expr',
@@ -109,9 +105,8 @@ class Mparser(Parser):
        'expr LE expr',
        'expr GT expr',
        'expr GE expr')
-    def expr(p):
+    def expr(self, p):
         pass
-    
     
     @_('expr "\'"',
        'ID',
@@ -124,26 +119,27 @@ class Mparser(Parser):
        'ONES "(" expr_list ")"',
        'ID "(" expr_list ")"',
        'ID "[" expr_list "]"',
-       '"(" expr ")"')
-    def expr(p):
+       '"(" expr ")"',
+       '"-" expr %prec UMINUS')
+    def expr(self, p):
         pass
     
-    
     @_('expr')
-    def expr_list(p):
+    def expr_list(self, p):
         pass
 
     @_('expr_list "," expr')
-    def expr_list(p):
+    def expr_list(self, p):
         pass
-    @_(' "[" row_list "]" ')
-    def matrix(p):
+        
+    @_('"[" row_list "]"')
+    def matrix(self, p):
         pass
     
     @_('row_list ";" row', 'row')
-    def row_list(p):
+    def row_list(self, p):
         pass
     
     @_('expr_list')
-    def row(p):
+    def row(self, p):
         pass
