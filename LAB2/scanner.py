@@ -31,15 +31,15 @@ class Scanner(Lexer):
     ADDASSIGN = r'\+='
     SUBASSIGN = r'-='
 
-    ADD    = r'\+'
-    SUB   = r'-'
-    MUL   = r'\*'
-    DIVIDE  = r'/'
-    
     DOTADD = r'\.\+'
     DOTSUB= r'\.-'
     DOTMUL= r'\.\*'
     DOTDIV  = r'\./'
+
+    ADD    = r'\+'
+    SUB   = r'-'
+    MUL   = r'\*'
+    DIVIDE  = r'/'
     
     literals = { '(', ')', '{', '}', '[', ']', ':',"'", ',', ';', '=' }
     

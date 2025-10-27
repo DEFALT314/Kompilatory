@@ -74,7 +74,7 @@ class Mparser(Parser):
     def block_stmt(self, p):
         pass
     
-    @_('PRINT expr ";"')
+    @_('PRINT expr_list ";"')
     def print_stmt(self, p):
         pass
     
@@ -90,6 +90,7 @@ class Mparser(Parser):
        'ID "[" expr_list "]"')
     def lvalue(self, p):
         pass
+
 
     @_('expr ADD expr',
        'expr SUB expr',
@@ -107,6 +108,8 @@ class Mparser(Parser):
        'expr GE expr')
     def expr(self, p):
         pass
+
+    
     
     @_('expr "\'"',
        'ID',
@@ -120,7 +123,7 @@ class Mparser(Parser):
        'ID "(" expr_list ")"',
        'ID "[" expr_list "]"',
        '"(" expr ")"',
-       '"-" expr %prec UMINUS')
+       'SUB expr %prec UMINUS')
     def expr(self, p):
         pass
     
