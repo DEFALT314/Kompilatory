@@ -8,7 +8,7 @@ class Mparser(Parser):
     debugfile = 'parser.out'
 
     precedence = (
-        ("right", '=', 'MULASSIGN', 'DIVASSIGN', 'ADDASSIGN', 'SUBASSIGN'),
+        # ("right", '=', 'MULASSIGN', 'DIVASSIGN', 'ADDASSIGN', 'SUBASSIGN'),
         ("nonassoc", 'IFX'),
         ("nonassoc", 'ELSE'),
         ("nonassoc", 'EQ', 'LT', 'LE', 'GT', 'GE', 'NE'),
@@ -66,7 +66,7 @@ class Mparser(Parser):
     def while_stmt(self, p):
         pass
     
-    @_('FOR ID "=" expr ":" expr instruction')
+    @_('FOR ID "=" INTNUM ":" INTNUM instruction')
     def for_stmt(self, p):
         pass
     
@@ -120,7 +120,6 @@ class Mparser(Parser):
        'EYE "(" expr_list ")"',
        'ZEROS "(" expr_list ")"',
        'ONES "(" expr_list ")"',
-       'ID "(" expr_list ")"',
        'ID "[" expr_list "]"',
        '"(" expr ")"',
        'SUB expr %prec UMINUS')
