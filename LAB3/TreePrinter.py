@@ -41,8 +41,7 @@ class TreePrinter:
     def printTree(self, indent=0):
         print(INDENT * indent + self.op)
         self.assigned.printTree(indent + 1)
-        if self.assigning:
-            self.assigning.printTree(indent + 1)
+        self.assigning.printTree(indent + 1)
 
     @addToClass(AST.If)
     def printTree(self, indent=0):
