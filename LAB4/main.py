@@ -1,26 +1,30 @@
 
 import sys
-import ply.yacc as yacc
-from Mparser import Mparser
+from scanner import Scanner
+from parser import Mparser
 from TreePrinter import TreePrinter
 from TypeChecker import TypeChecker
-
 if __name__ == '__main__':
 
     try:
-        filename = sys.argv[1] if len(sys.argv) > 1 else "example.txt"
+        filename = sys.argv[1] if len(sys.argv) > 1 else "opers.m"
         file = open(filename, "r")
     except IOError:
         print("Cannot open {0} file".format(filename))
         sys.exit(0)
 
-    Mparser = Mparser()
-    parser = yacc.yacc(module=Mparser)
     text = file.read()
 
-    ast = parser.parse(text, lexer=Mparser.scanner)
+    lexer = Scanner()
+    parser = Mparser()
 
-    # Below code shows how to use visitor
-    typeChecker = TypeChecker()   
-    typeChecker.visit(ast)   # or alternatively ast.accept(typeChecker)
-    
+    ast = parser.parse(lexer.tokenize(text))
+    if ast:
+        try:
+            typeChecker = TypeChecker()
+            typeChecker.visit(ast)
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+    else:
+        print("Błąd parsowania: nie wygenerowano AST.")

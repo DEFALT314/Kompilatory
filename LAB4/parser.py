@@ -2,14 +2,12 @@ from sly import Parser
 from scanner import Scanner
 from AST import *
 
-
 class Mparser(Parser):
 
     tokens = Scanner.tokens
     debugfile = 'parser.out'
 
     precedence = (
-        # ("right", '=', 'MULASSIGN', 'DIVASSIGN', 'ADDASSIGN', 'SUBASSIGN'),
         ("nonassoc", 'IFX'),
         ("nonassoc", 'ELSE'),
         ("nonassoc", 'EQ', 'LT', 'LE', 'GT', 'GE', 'NE'),
@@ -55,19 +53,28 @@ class Mparser(Parser):
     
     @_('BREAK ";"')
     def flow_stmt(self, p):
-        return Break()
+        node = Break()
+        node.lineno = p.lineno
+        return node
 
     @_('CONTINUE ";"')
     def flow_stmt(self, p):
-        return Continue()
+        node = Continue()
+        node.lineno = p.lineno
+        return node
 
     @_('RETURN ";"')
     def flow_stmt(self, p):
-        return Return(None)
+        node = Return(None)
+        node.lineno = p.lineno
+        return node
 
     @_('RETURN expr ";"')
     def flow_stmt(self, p):
-        return Return(p.expr)
+        node = Return(p.expr)
+        node.lineno = p.lineno
+        return node
+
 
     @_('IF "(" expr ")" instruction ELSE instruction')
     def if_stmt(self, p):
@@ -107,7 +114,9 @@ class Mparser(Parser):
        'lvalue MULASSIGN expr ";"',
        'lvalue DIVASSIGN expr ";"')
     def assignment(self, p):
-        return AssignmentExpr(p[1], p.lvalue, p.expr)
+        node = AssignmentExpr(p[1], p.lvalue, p.expr)
+        node.lineno = p.lineno
+        return node
     
     @_('ID')
     def lvalue(self, p):
@@ -116,8 +125,6 @@ class Mparser(Parser):
     @_('ID "[" expr_list "]"')
     def lvalue(self, p):
         return MatrixVariable(p.ID, p.expr_list)
-
-
     @_('expr ADD expr',
        'expr SUB expr',
        'expr MUL expr',
@@ -133,20 +140,26 @@ class Mparser(Parser):
        'expr GT expr',
        'expr GE expr')
     def expr(self, p):
-        return BinaryExpr(p[1], p.expr0, p.expr1)
+        node = BinaryExpr(p[1], p.expr0, p.expr1)
+        node.lineno = p.lineno
+        return node
     
 
     @_('"(" expr ")"')
     def expr(self, p):
         return p.expr 
     
-    # @_('ID "[" expr_list "]"')
-    # def expr(self, p):
-    #     return Reference(p.ID, p.expr_list)
+    @_('ID "[" expr_list "]"')
+    def expr(self, p):
+        node = MatrixVariable(p.ID, p.expr_list)
+        node.lineno = p.lineno
+        return node
     
     @_('ID')
     def expr(self, p):
-        return Variable(p.ID)
+        node = Variable(p.ID)
+        node.lineno = p.lineno
+        return node
       
     @_('INTNUM')
     def expr(self, p):
@@ -159,10 +172,6 @@ class Mparser(Parser):
     @_('STRING')
     def expr(self, p):
         return String(p.STRING)
-
-    @_('matrix')
-    def expr(self, p):
-        return p.matrix
 
     @_('expr "\'"')
     def expr(self, p):
@@ -180,7 +189,6 @@ class Mparser(Parser):
     @_('SUB expr %prec UMINUS')
     def expr(self, p):
         return UnaryExpr(p.SUB, p.expr)
-        
     
     @_('expr')
     def expr_list(self, p):
@@ -190,20 +198,30 @@ class Mparser(Parser):
     def expr_list(self, p):
         p.expr_list.append(p.expr)
         return p.expr_list
-        
-    @_('"[" row_list "]"')
-    def matrix(self, p):
-        return Matrix(p.row_list)
     
-    @_('row')
-    def row_list(self, p):
-        return [p.row]
+    @_('matrix')
+    def expr(self, p):
+        return p.matrix
 
-    @_('row_list ";" row')
-    def row_list(self, p):
-        p.row_list.list.append(p.row)
-        return p.row_list
-    
-    @_('expr_list')
-    def row(self, p):
-        return MatrixVector(p.expr_list)
+    @_('"[" expr_list "]"')
+    def matrix(self, p):
+        if p.expr_list and isinstance(p.expr_list[0], Matrix):
+            
+            real_rows = []
+            for elem in p.expr_list:
+                if isinstance(elem, Matrix):
+
+                    if elem.vec_list:
+                        real_rows.append(elem.vec_list[0])
+                else:
+                    node = Matrix([MatrixVector(p.expr_list)])
+                    node.lineno = p.lineno
+                    return node
+            
+            node = Matrix(real_rows)
+            node.lineno = p.lineno
+            return node
+        vector = MatrixVector(p.expr_list)
+        node = Matrix([vector])
+        node.lineno = p.lineno
+        return node
