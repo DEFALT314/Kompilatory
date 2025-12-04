@@ -71,11 +71,6 @@ class Interpreter(object):
         op = node.op
         r1 = self.visit(node.left)
         r2 = self.visit(node.right)
-        #print(r1,r2, type(r1), type(r2))
-        # try sth smarter than:
-        # if(node.op=='+') return r1+r2
-        # elsif(node.op=='-') ...
-        # but do not use python eval
         return self.operations[op](r1, r2)
 
 
@@ -84,7 +79,6 @@ class Interpreter(object):
         res = None
         match node.name:
             case "eye":
-                #print("====",self.visit(*node.instance_list))
                 res = np.eye(self.visit(*node.instance_list))
             case "ones":
                 res = np.ones(self.visit(*node.instance_list))
@@ -109,11 +103,7 @@ class Interpreter(object):
     @when(AST.AssignmentExpr)
     def visit(self, node):
         op = node.op
-        # print(node.assigning)
         assigning = self.visit(node.assigning)
-        # print(assigning)
-        # print(self.memory_stack.stack[0].memo)
-        #print(op, type(op), assigned, assigning)
         if isinstance(node.assigned,AST.MatrixVariable):
             assigned_name = node.assigned.name
             matrix = self.global_memory.get(assigned_name)
@@ -131,21 +121,11 @@ class Interpreter(object):
             assigned_name = node.assigned.name
             if op == "=":
                 self.global_memory.put(assigned_name, assigning)
-                # if not self.memory_stack.set(assigned, assigning):
-                #     memory = Memory()
-                #     memory.put(self, assigned, assigning)
-                #     self.memory_stack.push(memory)
+
             elif op in ["+=", "-=", "*=", "/="]:
-                #print("xd")
                 assigned = self.visit(node.assigned)
                 assigning_new = self.operations[op](assigned, assigning)
-                #print(assigned, assigning_new, type(assigned), type(assigning_new))
                 self.global_memory.put(assigned_name, assigning_new)
-                # assigning_new = self.operations[op](assigned, assigning)
-                # if not self.memory_stack.set(assigned, assigning_new):
-                #     memory = Memory()
-                #     memory.put(self, assigned, assigning_new)
-                #     self.memory_stack.push(memory)
 
 
 
@@ -218,13 +198,11 @@ class Interpreter(object):
     @when(AST.Instructions)
     def visit(self, node):
         for element in node.list:
-            #print(self.visit(element))
             self.visit(element)
 
 
     @when(AST.MatrixVariable)
     def visit(self, node):
-        # if self.memory_stack.get(node.name) is None:
         matrix = self.global_memory.get(node.name)
         x, y = map(self.visit, node.val_list)
         return matrix[x, y]
