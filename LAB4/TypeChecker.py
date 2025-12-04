@@ -70,7 +70,7 @@ class NodeVisitor(object):
 class TypeChecker(NodeVisitor):
     def __init__(self):
         self.symbol_table = SymbolTable(None, 'Global')
-        self.loop_fnesting = 0
+        self.loop_nesting = 0
 
     def error(self, node, msg):
         line = getattr(node, 'lineno', '?')
